@@ -356,7 +356,7 @@ class HttpClient:
             **req_kwargs,  # type: ignore
         )
         log.debug(f"Response: {response}")
-        return self._unpack_or_raise_details(response).values()
+        return self._unpack_or_raise_details(response)
 
 #    # //// TODO: figure out how to turn the resulting json payload into what's expected in the return dict[str, Any]
 #    # example return
@@ -420,7 +420,7 @@ class HttpClient:
             **req_kwargs,  # type: ignore
         )
         log.debug(f"Response: {response}")
-        return self._unpack_or_raise_details(response).values()
+        return self._unpack_or_raise_details(response)
 
     def sentence_similarity(
         self,
@@ -490,6 +490,7 @@ class HttpClient:
 
     def rerank(
         self,
+        token: str,
         model_id: str,
         documents: list[dict[str, Any]],
         query: str,
@@ -511,9 +512,14 @@ class HttpClient:
             json_input.update(parameters=parameters)
 
         req_kwargs = self._get_tls_configuration()
+        headers = {} if not token else {'Authorization': token}
 
+        print("---------------------")
+        print(json_input)
+        print("---------------------")
         response = requests.post(
             f"{self._api_base}/api/v1/task/rerank",
+            headers=headers,
             json=json_input,
             timeout=timeout,
             **req_kwargs,  # type: ignore
@@ -523,6 +529,7 @@ class HttpClient:
 
     def rerank_tasks(
         self,
+        token: str,
         model_id: str,
         documents: list[dict[str, Any]],
         queries: list[str],
@@ -544,9 +551,11 @@ class HttpClient:
             json_input.update(parameters=parameters)
 
         req_kwargs = self._get_tls_configuration()
+        headers = {} if not token else {'Authorization': token}
 
         response = requests.post(
             f"{self._api_base}/api/v1/task/rerank-tasks",
+            headers=headers,
             json=json_input,
             timeout=timeout,
             **req_kwargs,  # type: ignore
