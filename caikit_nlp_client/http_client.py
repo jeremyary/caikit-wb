@@ -358,38 +358,6 @@ class HttpClient:
         log.debug(f"Response: {response}")
         return self._unpack_or_raise_details(response)
 
-#    # //// TODO: figure out how to turn the resulting json payload into what's expected in the return dict[str, Any]
-#    # example return
-#    {
-#        "results": {
-#            "vectors": [
-#                {
-#                     "data": {
-#                        "values": [
-#                            0.03804047405719757,
-#                            ...
-#                            -0.012974763289093971
-#                        ]
-#                    }
-#                },
-#                {
-#                    "data": {
-#                        "values": [
-#                            0.03636283800005913,
-#                           ...
-#                           -0.027698205783963203
-#                       ]
-#                    }
-#                }
-#            ]
-#        },
-#        "producer_id": {
-#            "name": "EmbeddingModule",
-#             "version": "0.0.1"
-#        },
-#        "input_token_count": 10
-#    }
-
     def embedding_tasks(
         self,
         token: str,

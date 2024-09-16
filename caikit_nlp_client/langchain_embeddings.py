@@ -19,16 +19,12 @@ class LangchainEmbeddings(Embeddings):
             texts=texts,
         )
 
-        print(f"typeof response: {type(response)}")
-        print(f"and content: {response}")
-        
         return_list = []
         pulled_vector_list = response["results"]["vectors"]
         for j in range(len(pulled_vector_list)):
             veclist = pulled_vector_list[j]["data"]["values"]
             return_list.append(veclist)
 
-        print(f"return_list: {len(return_list)}")
         return return_list
 
     def embed_query(self, text: str) -> List[float]:
@@ -38,5 +34,4 @@ class LangchainEmbeddings(Embeddings):
             model_id=self.model,
             text=text
         )
-        print(f"single-end::{type(response)}")
-        return response
+        return response["result"]["data"]["values"]
