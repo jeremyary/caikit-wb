@@ -401,7 +401,7 @@ class HttpClient:
         if not model_id:
             raise ValueError("request must have a model id")
 
-        log.info(f"Calling embedding_tasks for '{model_id}'")
+        log.info(f"Calling embedding_tasks for '{model_id}' [{len(texts)} texts]")
         json_input: dict[str, Any] = {
             "inputs": texts,
             "model_id": model_id,
@@ -419,7 +419,7 @@ class HttpClient:
             timeout=timeout,
             **req_kwargs,  # type: ignore
         )
-        log.debug(f"Response: {response}")
+        print(f"Response: {response}")
         return self._unpack_or_raise_details(response)
 
     def sentence_similarity(
@@ -490,10 +490,10 @@ class HttpClient:
 
     def rerank(
         self,
-        token: str,
         model_id: str,
         documents: list[dict[str, Any]],
         query: str,
+        token: str = None,
         timeout: float = 60.0,
         parameters: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
@@ -514,9 +514,6 @@ class HttpClient:
         req_kwargs = self._get_tls_configuration()
         headers = {} if not token else {'Authorization': token}
 
-        print("---------------------")
-        print(json_input)
-        print("---------------------")
         response = requests.post(
             f"{self._api_base}/api/v1/task/rerank",
             headers=headers,
@@ -529,10 +526,10 @@ class HttpClient:
 
     def rerank_tasks(
         self,
-        token: str,
         model_id: str,
         documents: list[dict[str, Any]],
         queries: list[str],
+        token: str = None,
         timeout: float = 60.0,
         parameters: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
@@ -553,6 +550,7 @@ class HttpClient:
         req_kwargs = self._get_tls_configuration()
         headers = {} if not token else {'Authorization': token}
 
+        print(json_input)
         response = requests.post(
             f"{self._api_base}/api/v1/task/rerank-tasks",
             headers=headers,

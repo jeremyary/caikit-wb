@@ -19,15 +19,16 @@ class LangchainEmbeddings(Embeddings):
             texts=texts,
         )
 
+        print(f"typeof response: {type(response)}")
+        print(f"and content: {response}")
+        
         return_list = []
-        list_from_response = list(response)
-        for i in range(len(list_from_response)):
-            if type(list_from_response[i]) is dict and ("vectors" in (list_from_response[i])):
-                pulled_vector_list = list_from_response[i]["vectors"]
-                for j in range(len(pulled_vector_list)):
-                    veclist = pulled_vector_list[j]["data"]["values"]
-                    return_list.append(veclist)
+        pulled_vector_list = response["results"]["vectors"]
+        for j in range(len(pulled_vector_list)):
+            veclist = pulled_vector_list[j]["data"]["values"]
+            return_list.append(veclist)
 
+        print(f"return_list: {len(return_list)}")
         return return_list
 
     def embed_query(self, text: str) -> List[float]:
